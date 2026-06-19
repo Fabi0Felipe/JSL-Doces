@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSL Doces | Brigadeiros & Cupcakes Artesanais</title>
+  <meta name="description" content="Cardápio digital de brigadeiros e cupcakes artesanais. Peça pelo WhatsApp em poucos cliques." />
+
+  <!-- Fontes do Google: 'Fraunces' para títulos (serifa com personalidade doce) e 'Quicksand' para textos (arredondada e amigável) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===================== CABEÇALHO ===================== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="#topo" class="logo" aria-label="Doce Encanto - início">
+        <span class="logo-icon" aria-hidden="true">🍫</span>
+        <span class="logo-text">JSL<em> Doces</em></span>
+      </a>
+
+      <!-- Botão do carrinho fixo no canto superior direito -->
+      <button id="cartButton" class="cart-button" aria-label="Abrir carrinho de compras" aria-haspopup="dialog">
+        <svg class="cart-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M3 4H5L5.6 7M5.6 7H21L18 14H7M5.6 7L7 14M7 14L6.2 17.6C6.05 18.3 6.6 19 7.3 19H18M9 22C9.55 22 10 21.55 10 21C10 20.45 9.55 20 9 20C8.45 20 8 20.45 8 21C8 21.55 8.45 22 9 22ZM18 22C18.55 22 19 21.55 19 21C19 20.45 18.55 20 18 20C17.45 20 17 20.45 17 21C17 21.55 17.45 22 18 22Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span id="cartCount" class="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ===================== HERO ===================== -->
+  <section id="topo" class="hero">
+    <div class="hero-content">
+      <p class="hero-eyebrow">Feito à mão, todos os dias</p>
+      <h1 class="hero-title">Doçura que cabe<br>na palma da mão.</h1>
+      <p class="hero-subtitle">Brigadeiros cremosos e cupcakes fofinhos, prontos para adoçar
+        qualquer ocasião. Monte seu pedido e receba o link direto no WhatsApp.</p>
+      <a href="#cardapio" class="btn btn-primary">Ver cardápio</a>
+    </div>
+
+    <!-- Divisor "glacê" : o elemento de assinatura visual do site, imitando um filete de cobertura derretendo -->
+    <div class="icing-divider" aria-hidden="true">
+      <svg viewBox="0 0 1440 110" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,40 C 60,90 120,0 180,40 C 240,80 300,10 360,40 C 420,70 480,5 540,40
+                 C 600,75 660,15 720,40 C 780,65 840,5 900,40 C 960,75 1020,10 1080,40
+                 C 1140,70 1200,10 1260,40 C 1320,70 1380,15 1440,40 L1440,0 L0,0 Z" fill="var(--cream)"/>
+        <path d="M0,40 C 60,90 120,0 180,40 C 240,80 300,10 360,40 C 420,70 480,5 540,40
+                 C 600,75 660,15 720,40 C 780,65 840,5 900,40 C 960,75 1020,10 1080,40
+                 C 1140,70 1200,10 1260,40 C 1320,70 1380,15 1440,40
+                 L1440,55 C1380,85 1320,30 1260,55 C1200,80 1140,35 1080,55
+                 C1020,75 960,30 900,55 C840,80 780,35 720,55 C660,75 600,30 540,55
+                 C480,80 420,35 360,55 C300,75 240,30 180,55 C120,80 60,35 0,55 Z"
+              fill="var(--pink-light)"/>
+        <!-- pequenas "gotas" de glacê pingando -->
+        <circle cx="180" cy="60" r="5" fill="var(--pink-light)"/>
+        <circle cx="540" cy="60" r="4" fill="var(--pink-light)"/>
+        <circle cx="900" cy="62" r="6" fill="var(--pink-light)"/>
+        <circle cx="1260" cy="58" r="4" fill="var(--pink-light)"/>
+      </svg>
+    </div>
+  </section>
+
+  <!-- ===================== CARDÁPIO / PRODUTOS ===================== -->
+  <main>
+    <section id="cardapio" class="menu">
+      <div class="section-heading">
+        <p class="eyebrow">Nosso cardápio</p>
+        <h2>Escolha o seu docinho</h2>
+      </div>
+
+      <div class="product-grid">
+
+        <!-- ---------- PRODUTO: BRIGADEIRO ---------- -->
+        <article class="product-card" data-id="brigadeiro" data-name="Brigadeiro" data-price="1.50">
+          <div class="product-photo">
+            <img src="https://images.pexels.com/photos/33158039/pexels-photo-33158039.jpeg?auto=compress&cs=tinysrgb&w=800"
+                 alt="Brigadeiros artesanais cobertos com granulado de chocolate" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <div class="product-title-row">
+              <h3>🍫 Brigadeiro</h3>
+              <span class="price">R$ 1,50</span>
+            </div>
+            <p class="product-desc">Bolinha cremosa de chocolate belga, enrolada na granulada e
+              finalizada à mão. O clássico que nunca sai de moda.</p>
+            <button class="btn btn-add" data-action="add">
+              <span>Adicionar ao carrinho</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </article>
+
+        <!-- ---------- PRODUTO: CUPCAKE ---------- -->
+        <article class="product-card" data-id="cupcake" data-name="Cupcake" data-price="5.00">
+          <div class="product-photo">
+            <img src="https://images.pexels.com/photos/15356115/pexels-photo-15356115.jpeg?auto=compress&cs=tinysrgb&w=800"
+                 alt="Cupcake com cobertura cremosa de buttercream rosa em swirl" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <div class="product-title-row">
+              <h3>🧁 Cupcake</h3>
+              <span class="price">R$ 5,00</span>
+            </div>
+            <p class="product-desc">Massa fofinha de baunilha coberta com generoso swirl de
+              buttercream e uma cereja por cima. Perfeito pra qualquer celebração.</p>
+            <button class="btn btn-add" data-action="add">
+              <span>Adicionar ao carrinho</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- ===================== SOBRE / INFO ===================== -->
+    <section class="info-strip">
+      <div class="info-item">
+        <span class="info-icon" aria-hidden="true">🚚</span>
+        <p>Combine a entrega direto pelo WhatsApp</p>
+      </div>
+      <div class="info-item">
+        <span class="info-icon" aria-hidden="true">✋</span>
+        <p>Feito artesanalmente, em pequenas quantidades</p>
+      </div>
+      <div class="info-item">
+        <span class="info-icon" aria-hidden="true">💳</span>
+        <p>Pagamento combinado direto com a confeiteira</p>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===================== RODAPÉ ===================== -->
+  <footer class="site-footer">
+    <p>🍰 Doce Encanto — feito com carinho para adoçar o seu dia.</p>
+  </footer>
+
+  <!-- ===================== MODAL DO CARRINHO ===================== -->
+  <div id="cartOverlay" class="overlay" hidden></div>
+
+  <aside id="cartModal" class="cart-modal" role="dialog" aria-modal="true" aria-labelledby="cartTitle" hidden>
+    <div class="cart-modal-header">
+      <h2 id="cartTitle">Seu carrinho</h2>
+      <button id="closeCart" class="icon-button" aria-label="Fechar carrinho">✕</button>
+    </div>
+
+    <div class="cart-modal-body">
+
+      <!-- Lista de itens do carrinho, preenchida dinamicamente via JavaScript -->
+      <div id="cartItems" class="cart-items">
+        <!-- Itens inseridos via JS -->
+      </div>
+
+      <!-- Mensagem exibida quando o carrinho está vazio -->
+      <p id="emptyCartMsg" class="empty-cart-msg" hidden>Seu carrinho está vazio. Adicione uns docinhos! 🍬</p>
+
+      <!-- Total do pedido -->
+      <div class="cart-total-row">
+        <span>Total do pedido</span>
+        <strong id="cartTotal">R$ 0,00</strong>
+      </div>
+
+      <!-- Formulário com dados do cliente -->
+      <form id="checkoutForm" class="checkout-form">
+        <h3>Dados para entrega</h3>
+
+        <label for="custName">Nome completo</label>
+        <input type="text" id="custName" name="custName" placeholder="Seu nome" required />
+
+        <label for="custPhone">Telefone</label>
+        <input type="tel" id="custPhone" name="custPhone" placeholder="(84) 99999-9999" required />
+
+        <label for="custAddress">Endereço de entrega</label>
+        <input type="text" id="custAddress" name="custAddress" placeholder="Rua, número, bairro" required />
+
+        <label for="custNotes">Observações do pedido</label>
+        <textarea id="custNotes" name="custNotes" rows="3" placeholder="Ex: entregar após as 18h, sem sprinkles, etc."></textarea>
+
+        <!-- Botão verde que monta a mensagem e abre o WhatsApp -->
+        <button type="submit" id="whatsappBtn" class="btn btn-whatsapp">
+          <svg viewBox="0 0 32 32" aria-hidden="true" class="wpp-icon">
+            <path fill="currentColor" d="M16 .4C7.4.4.4 7.4.4 16c0 3 .8 5.8 2.4 8.2L.4 31.6l7.6-2.4c2.3 1.4 5 2.2 8 2.2 8.6 0 15.6-7 15.6-15.6C31.6 7.4 24.6.4 16 .4zm0 28.4c-2.6 0-5.1-.8-7.2-2.1l-.5-.3-4.5 1.4 1.4-4.4-.3-.5C3.2 21 2.4 18.6 2.4 16 2.4 8.5 8.5 2.4 16 2.4S29.6 8.5 29.6 16 23.5 28.8 16 28.8zm7.9-9.4c-.4-.2-2.5-1.2-2.9-1.4-.4-.1-.7-.2-1 .2-.3.4-1.1 1.4-1.3 1.6-.2.3-.5.3-.9.1-2.4-1.2-4-2.1-5.6-4.8-.4-.7.4-.7 1.1-2.2.1-.3.1-.5 0-.7-.1-.2-.9-2.1-1.2-2.9-.3-.7-.6-.6-.9-.6-.2 0-.5 0-.8 0-.3 0-.8.1-1.2.6-.4.5-1.6 1.6-1.6 3.8 0 2.2 1.6 4.4 1.9 4.7.2.3 2.5 3.9 6.2 5.4 3.7 1.4 3.7.9 4.4.9.7-.1 2.5-1 2.8-2 .3-1 .3-1.8.2-2-.1-.1-.3-.2-.7-.4z"/>
+          </svg>
+          Fazer Pedido pelo WhatsApp
+        </button>
+      </form>
+    </div>
+  </aside>
+
+  <!-- Notificação rápida ("toast") quando um item é adicionado -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
