@@ -13,7 +13,7 @@
   
     /* ---------------- 1. NÚMERO DO WHATSAPP DA LOJA ---------------- */
     // Número que recebe os pedidos, já no formato internacional (sem espaços/símbolos)
-    const WHATSAPP_NUMBER = "5584960803633";
+    const WHATSAPP_NUMBER = "558496803633";
   
     /* ---------------- 2. ESTADO DO CARRINHO ----------------
        Estrutura de cada item:
