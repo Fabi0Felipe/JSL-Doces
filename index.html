@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>JSL Doces | Brigadeiros & Cupcakes Artesanais</title>
-  <meta name="description" content="Cardápio digital de brigadeiros e cupcakes artesanais. Peça pelo WhatsApp em poucos cliques." />
+  <title>Doce Encanto | Brigadeiros Artesanais</title>
+  <meta name="description" content="Cardápio digital de brigadeiros artesanais, unitários ou em caixa. Peça pelo WhatsApp em poucos cliques." />
 
   <!-- Fontes do Google: 'Fraunces' para títulos (serifa com personalidade doce) e 'Quicksand' para textos (arredondada e amigável) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -20,7 +20,7 @@
     <div class="header-inner">
       <a href="#topo" class="logo" aria-label="Doce Encanto - início">
         <span class="logo-icon" aria-hidden="true">🍫</span>
-        <span class="logo-text">JSL<em> Doces</em></span>
+        <span class="logo-text">Doce<em>Encanto</em></span>
       </a>
 
       <!-- Botão do carrinho fixo no canto superior direito -->
@@ -38,8 +38,8 @@
     <div class="hero-content">
       <p class="hero-eyebrow">Feito à mão, todos os dias</p>
       <h1 class="hero-title">Doçura que cabe<br>na palma da mão.</h1>
-      <p class="hero-subtitle">Brigadeiros cremosos e cupcakes fofinhos, prontos para adoçar
-        qualquer ocasião. Monte seu pedido e receba o link direto no WhatsApp.</p>
+      <p class="hero-subtitle">Brigadeiros cremosos, unitários ou em caixinha,
+        prontos para adoçar qualquer ocasião. Monte seu pedido e receba o link direto no WhatsApp.</p>
       <a href="#cardapio" class="btn btn-primary">Ver cardápio</a>
     </div>
 
@@ -73,48 +73,11 @@
         <h2>Escolha o seu docinho</h2>
       </div>
 
-      <div class="product-grid">
-
-        <!-- ---------- PRODUTO: BRIGADEIRO ---------- -->
-        <article class="product-card" data-id="brigadeiro" data-name="Brigadeiro" data-price="1.50">
-          <div class="product-photo">
-            <img src="https://images.pexels.com/photos/33158039/pexels-photo-33158039.jpeg?auto=compress&cs=tinysrgb&w=800"
-                 alt="Brigadeiros artesanais cobertos com granulado de chocolate" loading="lazy" />
-          </div>
-          <div class="product-body">
-            <div class="product-title-row">
-              <h3>🍫 Brigadeiro</h3>
-              <span class="price">R$ 1,50</span>
-            </div>
-            <p class="product-desc">Bolinha cremosa de chocolate belga, enrolada na granulada e
-              finalizada à mão. O clássico que nunca sai de moda.</p>
-            <button class="btn btn-add" data-action="add">
-              <span>Adicionar ao carrinho</span>
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-            </button>
-          </div>
-        </article>
-
-        <!-- ---------- PRODUTO: CUPCAKE ---------- -->
-        <article class="product-card" data-id="cupcake" data-name="Cupcake" data-price="5.00">
-          <div class="product-photo">
-            <img src="https://images.pexels.com/photos/15356115/pexels-photo-15356115.jpeg?auto=compress&cs=tinysrgb&w=800"
-                 alt="Cupcake com cobertura cremosa de buttercream rosa em swirl" loading="lazy" />
-          </div>
-          <div class="product-body">
-            <div class="product-title-row">
-              <h3>🧁 Cupcake</h3>
-              <span class="price">R$ 5,00</span>
-            </div>
-            <p class="product-desc">Massa fofinha de baunilha coberta com generoso swirl de
-              buttercream e uma cereja por cima. Perfeito pra qualquer celebração.</p>
-            <button class="btn btn-add" data-action="add">
-              <span>Adicionar ao carrinho</span>
-              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
-            </button>
-          </div>
-        </article>
-
+      <!-- Os cards de produto são gerados dinamicamente pelo script.js a partir da lista
+           PRODUCTS, garantindo que cardápio, carrinho e mensagem do WhatsApp fiquem
+           sempre sincronizados a partir de uma única fonte de dados. -->
+      <div id="productGrid" class="product-grid">
+        <!-- Cards inseridos via JS -->
       </div>
     </section>
 
@@ -175,8 +138,26 @@
         <label for="custPhone">Telefone</label>
         <input type="tel" id="custPhone" name="custPhone" placeholder="(84) 99999-9999" required />
 
-        <label for="custAddress">Endereço de entrega</label>
-        <input type="text" id="custAddress" name="custAddress" placeholder="Rua, número, bairro" required />
+        <!-- Tipo de recebimento: define se os campos de endereço/mapa aparecem -->
+        <label class="form-label-top">Tipo de Recebimento</label>
+        <div class="radio-group" role="radiogroup" aria-label="Tipo de recebimento">
+          <label class="radio-option">
+            <input type="radio" name="deliveryType" id="deliveryEntrega" value="entrega" checked />
+            <span class="radio-custom" aria-hidden="true"></span>
+            <span class="radio-label">🚚 Entrega</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="deliveryType" id="deliveryRetirada" value="retirada" />
+            <span class="radio-custom" aria-hidden="true"></span>
+            <span class="radio-label">🏠 Vou pegar na residência</span>
+          </label>
+        </div>
+
+        <!-- Campos exibidos apenas quando "Entrega" está selecionado -->
+        <div id="deliveryFields">
+          <label for="custAddress">Endereço de entrega</label>
+          <input type="text" id="custAddress" name="custAddress" placeholder="Rua, número, bairro" />
+        </div>
 
         <label for="custNotes">Observações do pedido</label>
         <textarea id="custNotes" name="custNotes" rows="3" placeholder="Ex: entregar após as 18h, sem sprinkles, etc."></textarea>

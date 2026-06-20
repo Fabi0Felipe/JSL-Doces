@@ -1,9 +1,12 @@
 /* =====================================================================
    DOCE ENCANTO — SCRIPT PRINCIPAL
    Responsável por:
+   - Manter a lista de produtos (fonte única de dados)
+   - Renderizar os cards de produto dinamicamente
    - Gerenciar o carrinho de compras (adicionar, aumentar, diminuir, remover)
    - Atualizar o contador e o total na tela em tempo real
    - Abrir/fechar o modal do carrinho
+   - Controlar a lógica de "Entrega" vs "Vou pegar na residência"
    - Montar a mensagem do pedido e enviar para o WhatsApp
    Tudo em JavaScript puro, sem frameworks e sem backend.
    ===================================================================== */
@@ -15,9 +18,44 @@
     // Número que recebe os pedidos, já no formato internacional (sem espaços/símbolos)
     const WHATSAPP_NUMBER = "558496803633";
   
-    /* ---------------- 2. ESTADO DO CARRINHO ----------------
+    /* ---------------- 2. LISTA DE PRODUTOS (FONTE ÚNICA DE DADOS) ----------------
+       Qualquer alteração aqui (adicionar, remover, mudar preço/nome) atualiza
+       automaticamente: os cards do cardápio, o carrinho, os cálculos de total
+       e a mensagem enviada para o WhatsApp.
+    */
+    const PRODUCTS = [
+      {
+        id: "brigadeiro-unitario",
+        emoji: "🍫",
+        name: "Brigadeiro Unitário",
+        price: 2.00,
+        desc: "Bolinha cremosa de chocolate belga, enrolada na granulada e finalizada à mão. O clássico que nunca sai de moda.",
+        image: "https://images.pexels.com/photos/33158039/pexels-photo-33158039.jpeg?auto=compress&cs=tinysrgb&w=800",
+        alt: "Brigadeiros artesanais cobertos com granulado de chocolate",
+      },
+      {
+        id: "caixa-4-brigadeiros",
+        emoji: "📦",
+        name: "Caixa com 4 Brigadeiros",
+        price: 6.99,
+        desc: "Caixinha com 4 brigadeiros artesanais, prontos para presentear ou se presentear.",
+        image: "https://images.pexels.com/photos/9285186/pexels-photo-9285186.jpeg?auto=compress&cs=tinysrgb&w=800",
+        alt: "Caixa com brigadeiros artesanais de chocolate",
+      },
+      {
+        id: "caixa-6-brigadeiros",
+        emoji: "📦",
+        name: "Caixa com 6 Brigadeiros",
+        price: 9.99,
+        desc: "Caixinha com 6 brigadeiros artesanais — a escolha perfeita para compartilhar.",
+        image: "https://images.pexels.com/photos/9285199/pexels-photo-9285199.jpeg?auto=compress&cs=tinysrgb&w=800",
+        alt: "Caixa com seis brigadeiros artesanais de chocolate",
+      },
+    ];
+  
+    /* ---------------- 3. ESTADO DO CARRINHO ----------------
        Estrutura de cada item:
-       { id: 'brigadeiro', name: 'Brigadeiro', emoji: '🍫', price: 1.50, qty: 2 }
+       { id: 'brigadeiro-unitario', name: 'Brigadeiro Unitário', emoji: '🍫', price: 2.00, qty: 2 }
     */
     let cart = [];
   
@@ -30,7 +68,13 @@
       cart = [];
     }
   
-    /* ---------------- 3. REFERÊNCIAS DOS ELEMENTOS DO DOM ---------------- */
+    // Remove do carrinho salvo qualquer produto que não exista mais na lista atual
+    // (ex.: o Cupcake, removido do cardápio), para nunca quebrar o cálculo do total.
+    cart = cart.filter((item) => PRODUCTS.some((p) => p.id === item.id));
+  
+    /* ---------------- 4. REFERÊNCIAS DOS ELEMENTOS DO DOM ---------------- */
+    const productGrid = document.getElementById("productGrid");
+  
     const cartButton = document.getElementById("cartButton");
     const cartOverlay = document.getElementById("cartOverlay");
     const cartModal = document.getElementById("cartModal");
@@ -42,13 +86,20 @@
     const checkoutForm = document.getElementById("checkoutForm");
     const toastEl = document.getElementById("toast");
   
-    const addButtons = document.querySelectorAll('[data-action="add"]');
+    const deliveryFields = document.getElementById("deliveryFields");
+    const custAddressInput = document.getElementById("custAddress");
+    const deliveryRadios = document.querySelectorAll('input[name="deliveryType"]');
   
-    /* ---------------- 4. FUNÇÕES UTILITÁRIAS ---------------- */
+    /* ---------------- 5. FUNÇÕES UTILITÁRIAS ---------------- */
   
     // Formata um número para o padrão monetário brasileiro (R$ 0,00)
     function formatBRL(value) {
       return "R$ " + value.toFixed(2).replace(".", ",");
+    }
+  
+    // Busca um produto da lista PRODUCTS pelo id
+    function findProduct(id) {
+      return PRODUCTS.find((p) => p.id === id);
     }
   
     // Salva o estado atual do carrinho no localStorage
@@ -80,7 +131,31 @@
       }, 2200);
     }
   
-    /* ---------------- 5. RENDERIZAÇÃO DO CARRINHO ---------------- */
+    /* ---------------- 6. RENDERIZAÇÃO DOS CARDS DE PRODUTO ---------------- */
+  
+    // Gera o HTML de todos os cards de produto a partir da lista PRODUCTS
+    function renderProductGrid() {
+      productGrid.innerHTML = PRODUCTS.map((p) => `
+        <article class="product-card" data-id="${p.id}">
+          <div class="product-photo">
+            <img src="${p.image}" alt="${p.alt}" loading="lazy" />
+          </div>
+          <div class="product-body">
+            <div class="product-title-row">
+              <h3>${p.emoji} ${p.name}</h3>
+              <span class="price">${formatBRL(p.price)}</span>
+            </div>
+            <p class="product-desc">${p.desc}</p>
+            <button class="btn btn-add" type="button" data-action="add" data-id="${p.id}">
+              <span>Adicionar ao carrinho</span>
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </article>
+      `).join("");
+    }
+  
+    /* ---------------- 7. RENDERIZAÇÃO DO CARRINHO ---------------- */
   
     // Redesenha toda a lista de itens do carrinho, o total e o contador
     function renderCart() {
@@ -128,18 +203,21 @@
       persistCart();
     }
   
-    /* ---------------- 6. AÇÕES DO CARRINHO ---------------- */
+    /* ---------------- 8. AÇÕES DO CARRINHO ---------------- */
   
     // Adiciona um produto ao carrinho (ou aumenta a quantidade se já existir)
-    function addToCart(id, name, emoji, price) {
+    function addToCart(id) {
+      const product = findProduct(id);
+      if (!product) return; // segurança: ignora ids que não existem mais na lista
+  
       const existing = cart.find((item) => item.id === id);
       if (existing) {
         existing.qty += 1;
       } else {
-        cart.push({ id, name, emoji, price, qty: 1 });
+        cart.push({ id: product.id, name: product.name, emoji: product.emoji, price: product.price, qty: 1 });
       }
       renderCart();
-      showToast(`${emoji} ${name} adicionado ao carrinho!`);
+      showToast(`${product.emoji} ${product.name} adicionado ao carrinho!`);
     }
   
     // Aumenta a quantidade de um item já presente no carrinho
@@ -168,7 +246,7 @@
       renderCart();
     }
   
-    /* ---------------- 7. ABERTURA E FECHAMENTO DO MODAL ---------------- */
+    /* ---------------- 9. ABERTURA E FECHAMENTO DO MODAL ---------------- */
   
     function openCart() {
       cartOverlay.hidden = false;
@@ -192,15 +270,43 @@
       }, 320);
     }
   
-    /* ---------------- 8. MONTAGEM DA MENSAGEM E ENVIO PARA O WHATSAPP ---------------- */
+    /* ---------------- 10. LÓGICA DE TIPO DE RECEBIMENTO (ENTREGA x RETIRADA) ---------------- */
+  
+    // Retorna o tipo de recebimento selecionado: "entrega" ou "retirada"
+    function getDeliveryType() {
+      const checked = document.querySelector('input[name="deliveryType"]:checked');
+      return checked ? checked.value : "entrega";
+    }
+  
+    // Mostra/oculta os campos de endereço e localização conforme o tipo de recebimento
+    function updateDeliveryFieldsVisibility() {
+      const isEntrega = getDeliveryType() === "entrega";
+  
+      deliveryFields.hidden = !isEntrega;
+  
+      // O endereço só é obrigatório quando o cliente escolhe "Entrega"
+      if (isEntrega) {
+        custAddressInput.setAttribute("required", "required");
+      } else {
+        custAddressInput.removeAttribute("required");
+        custAddressInput.value = "";
+      }
+    }
+  
+    /* ---------------- 11. MONTAGEM DA MENSAGEM E ENVIO PARA O WHATSAPP ---------------- */
   
     function buildWhatsAppMessage(customer) {
       const lines = [];
   
-      lines.push("🍫 PEDIDO DE DOCES");
+      lines.push("🍫 PEDIDO JSL DOCES");
       lines.push(`Cliente: ${customer.name}`);
       lines.push(`Telefone: ${customer.phone}`);
-      lines.push(`Endereço: ${customer.address}`);
+      lines.push(`Tipo de Recebimento: ${customer.deliveryLabel}`);
+  
+      if (customer.deliveryType === "entrega") {
+        lines.push(`Endereço: ${customer.address}`);
+      }
+  
       lines.push("");
       lines.push("Itens:");
   
@@ -212,11 +318,8 @@
       lines.push("");
       lines.push(`Total do Pedido: ${formatBRL(getCartTotal())}`);
   
-      if (customer.notes && customer.notes.trim() !== "") {
-        lines.push("");
-        lines.push("Observações:");
-        lines.push(customer.notes.trim());
-      }
+      lines.push("");
+      lines.push(`Observações: ${customer.notes && customer.notes.trim() !== "" ? customer.notes.trim() : "nenhuma"}`);
   
       lines.push("");
       lines.push("Obrigado!");
@@ -232,16 +335,26 @@
         return;
       }
   
+      const deliveryType = getDeliveryType();
+      const deliveryLabel = deliveryType === "entrega" ? "🚚 Entrega" : "🏠 Vou pegar na residência";
+  
       // Captura os dados informados no formulário
       const customer = {
         name: document.getElementById("custName").value.trim(),
         phone: document.getElementById("custPhone").value.trim(),
-        address: document.getElementById("custAddress").value.trim(),
+        deliveryType: deliveryType,
+        deliveryLabel: deliveryLabel,
+        address: custAddressInput.value.trim(),
         notes: document.getElementById("custNotes").value,
       };
   
-      if (!customer.name || !customer.phone || !customer.address) {
-        showToast("Preencha nome, telefone e endereço para continuar");
+      if (!customer.name || !customer.phone) {
+        showToast("Preencha nome e telefone para continuar");
+        return;
+      }
+  
+      if (customer.deliveryType === "entrega" && !customer.address) {
+        showToast("Informe o endereço de entrega para continuar");
         return;
       }
   
@@ -256,18 +369,13 @@
       window.open(whatsappURL, "_blank");
     }
   
-    /* ---------------- 9. EVENTOS ---------------- */
+    /* ---------------- 12. EVENTOS ---------------- */
   
-    // Clique nos botões "Adicionar ao carrinho" de cada produto
-    addButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const card = button.closest(".product-card");
-        const id = card.dataset.id;
-        const name = card.dataset.name;
-        const price = parseFloat(card.dataset.price);
-        const emoji = name === "Brigadeiro" ? "🍫" : "🧁";
-        addToCart(id, name, emoji, price);
-      });
+    // Delegação de eventos para os botões "Adicionar ao carrinho" (cards são gerados dinamicamente)
+    productGrid.addEventListener("click", (e) => {
+      const button = e.target.closest('[data-action="add"]');
+      if (!button) return;
+      addToCart(button.dataset.id);
     });
   
     // Abrir/fechar o modal do carrinho
@@ -298,9 +406,16 @@
       }
     });
   
+    // Alterna a visibilidade dos campos de endereço/localização ao trocar o tipo de recebimento
+    deliveryRadios.forEach((radio) => {
+      radio.addEventListener("change", updateDeliveryFieldsVisibility);
+    });
+  
     // Envio do formulário -> gera mensagem e abre o WhatsApp
     checkoutForm.addEventListener("submit", sendOrderToWhatsApp);
   
-    /* ---------------- 10. INICIALIZAÇÃO ---------------- */
+    /* ---------------- 13. INICIALIZAÇÃO ---------------- */
+    renderProductGrid();
     renderCart();
+    updateDeliveryFieldsVisibility();
   })();
