@@ -6,8 +6,7 @@
    - Gerenciar o carrinho de compras (adicionar, aumentar, diminuir, remover)
    - Atualizar o contador e o total na tela em tempo real
    - Abrir/fechar o modal do carrinho
-   - Controlar a lógica de "Entrega" vs "Vou pegar na residência"
-   - Montar a mensagem do pedido e enviar para o WhatsApp
+   - Montar a mensagem do pedido (com endereço de entrega) e enviar para o WhatsApp
    Tudo em JavaScript puro, sem frameworks e sem backend.
    ===================================================================== */
 
@@ -16,7 +15,7 @@
   
     /* ---------------- 1. NÚMERO DO WHATSAPP DA LOJA ---------------- */
     // Número que recebe os pedidos, já no formato internacional (sem espaços/símbolos)
-    const WHATSAPP_NUMBER = "558496803633";
+    const WHATSAPP_NUMBER = "558496551333";
   
     /* ---------------- 2. LISTA DE PRODUTOS (FONTE ÚNICA DE DADOS) ----------------
        Qualquer alteração aqui (adicionar, remover, mudar preço/nome) atualiza
@@ -25,11 +24,11 @@
     */
     const PRODUCTS = [
       {
-        id: "brigadeiro-unitario",
+        id: "brigadeiro-Único",
         emoji: "🍫",
-        name: "Brigadeiro Unitário",
+        name: "Brigadeiro Único",
         price: 2.00,
-        desc: "Bolinha cremosa de chocolate belga, enrolada na granulada e finalizada à mão. O clássico que nunca sai de moda.",
+        desc: "Bolinha cremosa de chocolate, enrolada na granulada e finalizada à mão. O clássico que nunca sai de moda.",
         image: "https://images.pexels.com/photos/33158039/pexels-photo-33158039.jpeg?auto=compress&cs=tinysrgb&w=800",
         alt: "Brigadeiros artesanais cobertos com granulado de chocolate",
       },
@@ -86,9 +85,7 @@
     const checkoutForm = document.getElementById("checkoutForm");
     const toastEl = document.getElementById("toast");
   
-    const deliveryFields = document.getElementById("deliveryFields");
     const custAddressInput = document.getElementById("custAddress");
-    const deliveryRadios = document.querySelectorAll('input[name="deliveryType"]');
   
     /* ---------------- 5. FUNÇÕES UTILITÁRIAS ---------------- */
   
@@ -270,30 +267,7 @@
       }, 320);
     }
   
-    /* ---------------- 10. LÓGICA DE TIPO DE RECEBIMENTO (ENTREGA x RETIRADA) ---------------- */
-  
-    // Retorna o tipo de recebimento selecionado: "entrega" ou "retirada"
-    function getDeliveryType() {
-      const checked = document.querySelector('input[name="deliveryType"]:checked');
-      return checked ? checked.value : "entrega";
-    }
-  
-    // Mostra/oculta os campos de endereço e localização conforme o tipo de recebimento
-    function updateDeliveryFieldsVisibility() {
-      const isEntrega = getDeliveryType() === "entrega";
-  
-      deliveryFields.hidden = !isEntrega;
-  
-      // O endereço só é obrigatório quando o cliente escolhe "Entrega"
-      if (isEntrega) {
-        custAddressInput.setAttribute("required", "required");
-      } else {
-        custAddressInput.removeAttribute("required");
-        custAddressInput.value = "";
-      }
-    }
-  
-    /* ---------------- 11. MONTAGEM DA MENSAGEM E ENVIO PARA O WHATSAPP ---------------- */
+    /* ---------------- 10. MONTAGEM DA MENSAGEM E ENVIO PARA O WHATSAPP ---------------- */
   
     function buildWhatsAppMessage(customer) {
       const lines = [];
@@ -301,11 +275,7 @@
       lines.push("🍫 PEDIDO JSL DOCES");
       lines.push(`Cliente: ${customer.name}`);
       lines.push(`Telefone: ${customer.phone}`);
-      lines.push(`Tipo de Recebimento: ${customer.deliveryLabel}`);
-  
-      if (customer.deliveryType === "entrega") {
-        lines.push(`Endereço: ${customer.address}`);
-      }
+      lines.push(`Endereço: ${customer.address}`);
   
       lines.push("");
       lines.push("Itens:");
@@ -335,26 +305,16 @@
         return;
       }
   
-      const deliveryType = getDeliveryType();
-      const deliveryLabel = deliveryType === "entrega" ? "🚚 Entrega" : "🏠 Vou pegar na residência";
-  
       // Captura os dados informados no formulário
       const customer = {
         name: document.getElementById("custName").value.trim(),
         phone: document.getElementById("custPhone").value.trim(),
-        deliveryType: deliveryType,
-        deliveryLabel: deliveryLabel,
         address: custAddressInput.value.trim(),
         notes: document.getElementById("custNotes").value,
       };
   
-      if (!customer.name || !customer.phone) {
-        showToast("Preencha nome e telefone para continuar");
-        return;
-      }
-  
-      if (customer.deliveryType === "entrega" && !customer.address) {
-        showToast("Informe o endereço de entrega para continuar");
+      if (!customer.name || !customer.phone || !customer.address) {
+        showToast("Preencha nome, telefone e endereço para continuar");
         return;
       }
   
@@ -369,7 +329,7 @@
       window.open(whatsappURL, "_blank");
     }
   
-    /* ---------------- 12. EVENTOS ---------------- */
+    /* ---------------- 11. EVENTOS ---------------- */
   
     // Delegação de eventos para os botões "Adicionar ao carrinho" (cards são gerados dinamicamente)
     productGrid.addEventListener("click", (e) => {
@@ -406,16 +366,10 @@
       }
     });
   
-    // Alterna a visibilidade dos campos de endereço/localização ao trocar o tipo de recebimento
-    deliveryRadios.forEach((radio) => {
-      radio.addEventListener("change", updateDeliveryFieldsVisibility);
-    });
-  
     // Envio do formulário -> gera mensagem e abre o WhatsApp
     checkoutForm.addEventListener("submit", sendOrderToWhatsApp);
   
-    /* ---------------- 13. INICIALIZAÇÃO ---------------- */
+    /* ---------------- 12. INICIALIZAÇÃO ---------------- */
     renderProductGrid();
     renderCart();
-    updateDeliveryFieldsVisibility();
   })();

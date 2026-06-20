@@ -1,21 +1,18 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Doce Encanto | Brigadeiros Artesanais</title>
-      
-        <meta name="description" content="Cardápio digital de brigadeiros artesanais, unitários ou em caixa. Peça pelo WhatsApp em poucos cliques." />
-      
-        <meta name="google-site-verification" content="LlygWnrWH1ogs8EcWGsnCJyLy8wmh92P-sr4rNlSzis" />
-      
-        <!-- Fontes do Google: 'Fraunces' para títulos (serifa com personalidade doce) e 'Quicksand' para textos (arredondada e amigável) -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-      
-        <link rel="stylesheet" href="style.css" />
-      </head>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doce Encanto | Brigadeiros Artesanais</title>
+  <meta name="description" content="Cardápio digital de brigadeiros artesanais, unitários ou em caixa. Peça pelo WhatsApp em poucos cliques." />
+
+  <!-- Fontes do Google: 'Fraunces' para títulos (serifa com personalidade doce) e 'Quicksand' para textos (arredondada e amigável) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css" />
+</head>
 <body>
 
   <!-- ===================== CABEÇALHO ===================== -->
@@ -141,29 +138,12 @@
         <label for="custPhone">Telefone</label>
         <input type="tel" id="custPhone" name="custPhone" placeholder="(84) 99999-9999" required />
 
-        <!-- Tipo de recebimento: define se os campos de endereço/mapa aparecem -->
-        <label class="form-label-top">Tipo de Recebimento</label>
-        <div class="radio-group" role="radiogroup" aria-label="Tipo de recebimento">
-          <label class="radio-option">
-            <input type="radio" name="deliveryType" id="deliveryEntrega" value="entrega" checked />
-            <span class="radio-custom" aria-hidden="true"></span>
-            <span class="radio-label">🚚 Entrega</span>
-          </label>
-          <label class="radio-option">
-            <input type="radio" name="deliveryType" id="deliveryRetirada" value="retirada" />
-            <span class="radio-custom" aria-hidden="true"></span>
-            <span class="radio-label">🏠 Vou pegar na residência</span>
-          </label>
-        </div>
-
-        <!-- Campos exibidos apenas quando "Entrega" está selecionado -->
-        <div id="deliveryFields">
-          <label for="custAddress">Endereço de entrega</label>
-          <input type="text" id="custAddress" name="custAddress" placeholder="Rua, número, bairro" />
-        </div>
+        <!-- Como agora só existe entrega, o endereço é sempre exibido e obrigatório -->
+        <label for="custAddress">Endereço de entrega</label>
+        <input type="text" id="custAddress" name="custAddress" placeholder="Rua, número, bairro" required />
 
         <label for="custNotes">Observações do pedido</label>
-        <textarea id="custNotes" name="custNotes" rows="3" placeholder="Ex: entregar após as 18h, sem sprinkles, etc."></textarea>
+        <textarea id="custNotes" name="custNotes" rows="3" placeholder="Ex: entregar após as 18h, não precisa de caixa, etc."></textarea>
 
         <!-- Botão verde que monta a mensagem e abre o WhatsApp -->
         <button type="submit" id="whatsappBtn" class="btn btn-whatsapp">
