@@ -24,11 +24,11 @@
     */
     const PRODUCTS = [
       {
-        id: "brigadeiro-Único",
+        id: "brigadeiro-unitario",
         emoji: "🍫",
-        name: "Brigadeiro Único",
+        name: "Brigadeiro Unitário",
         price: 2.00,
-        desc: "Bolinha cremosa de chocolate, enrolada na granulada e finalizada à mão. O clássico que nunca sai de moda.",
+        desc: "Bolinha cremosa de chocolate belga, enrolada na granulada e finalizada à mão. O clássico que nunca sai de moda.",
         image: "https://images.pexels.com/photos/33158039/pexels-photo-33158039.jpeg?auto=compress&cs=tinysrgb&w=800",
         alt: "Brigadeiros artesanais cobertos com granulado de chocolate",
       },
@@ -55,21 +55,11 @@
     /* ---------------- 3. ESTADO DO CARRINHO ----------------
        Estrutura de cada item:
        { id: 'brigadeiro-unitario', name: 'Brigadeiro Unitário', emoji: '🍫', price: 2.00, qty: 2 }
+  
+       O carrinho começa sempre vazio: nada é salvo entre sessões, então ao
+       sair e voltar ao site (ou recarregar a página) o pedido reinicia do zero.
     */
     let cart = [];
-  
-    // Tenta recuperar um carrinho salvo anteriormente no navegador (persistência simples,
-    // não é obrigatório pelo projeto, mas melhora a experiência caso a página recarregue)
-    try {
-      const saved = localStorage.getItem("doceEncantoCart");
-      if (saved) cart = JSON.parse(saved);
-    } catch (e) {
-      cart = [];
-    }
-  
-    // Remove do carrinho salvo qualquer produto que não exista mais na lista atual
-    // (ex.: o Cupcake, removido do cardápio), para nunca quebrar o cálculo do total.
-    cart = cart.filter((item) => PRODUCTS.some((p) => p.id === item.id));
   
     /* ---------------- 4. REFERÊNCIAS DOS ELEMENTOS DO DOM ---------------- */
     const productGrid = document.getElementById("productGrid");
@@ -85,7 +75,9 @@
     const checkoutForm = document.getElementById("checkoutForm");
     const toastEl = document.getElementById("toast");
   
-    const custAddressInput = document.getElementById("custAddress");
+    const custHouseNumberInput = document.getElementById("custHouseNumber");
+    const custStreetInput = document.getElementById("custStreet");
+    const custNeighborhoodInput = document.getElementById("custNeighborhood");
   
     /* ---------------- 5. FUNÇÕES UTILITÁRIAS ---------------- */
   
@@ -97,15 +89,6 @@
     // Busca um produto da lista PRODUCTS pelo id
     function findProduct(id) {
       return PRODUCTS.find((p) => p.id === id);
-    }
-  
-    // Salva o estado atual do carrinho no localStorage
-    function persistCart() {
-      try {
-        localStorage.setItem("doceEncantoCart", JSON.stringify(cart));
-      } catch (e) {
-        /* localStorage pode estar indisponível (modo privado, etc.) — ignoramos o erro */
-      }
     }
   
     // Calcula o valor total do carrinho somando (preço x quantidade) de cada item
@@ -195,9 +178,6 @@
   
       // Atualiza o total geral do pedido
       cartTotalEl.textContent = formatBRL(getCartTotal());
-  
-      // Salva o estado atualizado
-      persistCart();
     }
   
     /* ---------------- 8. AÇÕES DO CARRINHO ---------------- */
@@ -267,7 +247,20 @@
       }, 320);
     }
   
-    /* ---------------- 10. MONTAGEM DA MENSAGEM E ENVIO PARA O WHATSAPP ---------------- */
+    /* ---------------- 10. FORMA DE PAGAMENTO ---------------- */
+  
+    // Retorna a forma de pagamento selecionada: "pix" ou "dinheiro"
+    function getPaymentMethod() {
+      const checked = document.querySelector('input[name="paymentMethod"]:checked');
+      return checked ? checked.value : "pix";
+    }
+  
+    // Monta o texto da forma de pagamento para a mensagem do WhatsApp
+    function getPaymentLabel(paymentMethod) {
+      return paymentMethod === "dinheiro" ? "💵 Dinheiro físico" : "💠 Pix";
+    }
+  
+    /* ---------------- 11. MONTAGEM DA MENSAGEM E ENVIO PARA O WHATSAPP ---------------- */
   
     function buildWhatsAppMessage(customer) {
       const lines = [];
@@ -276,6 +269,7 @@
       lines.push(`Cliente: ${customer.name}`);
       lines.push(`Telefone: ${customer.phone}`);
       lines.push(`Endereço: ${customer.address}`);
+      lines.push(`Forma de Pagamento: ${customer.paymentLabel}`);
   
       lines.push("");
       lines.push("Itens:");
@@ -305,16 +299,23 @@
         return;
       }
   
+      const houseNumber = custHouseNumberInput.value.trim();
+      const street = custStreetInput.value.trim();
+      const neighborhood = custNeighborhoodInput.value.trim();
+      const paymentMethod = getPaymentMethod();
+  
       // Captura os dados informados no formulário
       const customer = {
         name: document.getElementById("custName").value.trim(),
         phone: document.getElementById("custPhone").value.trim(),
-        address: custAddressInput.value.trim(),
+        // Junta os 3 campos em uma única linha de endereço para a mensagem
+        address: `${street}, nº ${houseNumber} - ${neighborhood}`,
+        paymentLabel: getPaymentLabel(paymentMethod),
         notes: document.getElementById("custNotes").value,
       };
   
-      if (!customer.name || !customer.phone || !customer.address) {
-        showToast("Preencha nome, telefone e endereço para continuar");
+      if (!customer.name || !customer.phone || !houseNumber || !street || !neighborhood) {
+        showToast("Preencha nome, telefone e endereço completo para continuar");
         return;
       }
   
@@ -329,7 +330,7 @@
       window.open(whatsappURL, "_blank");
     }
   
-    /* ---------------- 11. EVENTOS ---------------- */
+    /* ---------------- 12. EVENTOS ---------------- */
   
     // Delegação de eventos para os botões "Adicionar ao carrinho" (cards são gerados dinamicamente)
     productGrid.addEventListener("click", (e) => {
@@ -369,7 +370,7 @@
     // Envio do formulário -> gera mensagem e abre o WhatsApp
     checkoutForm.addEventListener("submit", sendOrderToWhatsApp);
   
-    /* ---------------- 12. INICIALIZAÇÃO ---------------- */
+    /* ---------------- 13. INICIALIZAÇÃO ---------------- */
     renderProductGrid();
     renderCart();
   })();
