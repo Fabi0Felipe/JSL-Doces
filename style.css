@@ -333,7 +333,7 @@ textarea:focus-visible {
 
 .product-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 28px;
 }
 
@@ -784,17 +784,7 @@ textarea:focus-visible {
 
 /* ---------------------- 12. RESPONSIVIDADE ---------------------- */
 @media (max-width: 860px) {
-  .product-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .info-strip {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 600px) {
-  .product-grid {
     grid-template-columns: 1fr;
   }
 }

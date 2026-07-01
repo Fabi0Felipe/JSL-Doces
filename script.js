@@ -50,6 +50,15 @@
         image: "https://images.pexels.com/photos/9285199/pexels-photo-9285199.jpeg?auto=compress&cs=tinysrgb&w=800",
         alt: "Caixa com seis brigadeiros artesanais de chocolate",
       },
+      {
+        id: "empada-doce",
+        emoji: "🥧",
+        name: "Empada Doce",
+        price: 7.00,
+        desc: "Massa amanteigada recheada com doce de leite cremoso e finalizada com calda dourada.",
+        image: "image.jpeg",
+        alt: "Empada doce recheada com doce de leite e calda dourada",
+      },
     ];
   
     /* ---------------- 3. ESTADO DO CARRINHO ----------------
