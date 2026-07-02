@@ -56,7 +56,7 @@
         name: "Empada Doce",
         price: 7.00,
         desc: "Massa amanteigada recheada com doce de leite cremoso e finalizada com calda dourada.",
-        image: "images/empada-doce.jpeg",
+        image: "image.jpeg",
         alt: "Empada doce recheada com doce de leite e calda dourada",
       },
     ];
