@@ -1,24 +1,25 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Doce Encanto | Brigadeiros Artesanais</title>
-  <meta name="description" content="Cardápio digital de brigadeiros artesanais, unitários ou em caixa. Peça pelo WhatsApp em poucos cliques." />
-
-  <!-- Fontes do Google: 'Fraunces' para títulos (serifa com personalidade doce) e 'Quicksand' para textos (arredondada e amigável) -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="style.css" />
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JSL Doces | Brigadeiros Artesanais</title>
+    <meta name="description" content="Cardápio digital de brigadeiros artesanais, unitários ou em caixa. Peça pelo WhatsApp em poucos cliques." />
+   
+    <!-- Fontes do Google: 'Fraunces' para títulos (serifa com personalidade doce) e 'Quicksand' para textos (arredondada e amigável) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+   
+    <link rel="stylesheet" href="style.css" />
+    <meta name="google-site-verification" content="HI7yvcQJpaXZGgiVpfLhZsUm9xhlbhFZyHYs1EfwJtw" />
+  </head>
 <body>
 
   <!-- ===================== CABEÇALHO ===================== -->
   <header class="site-header">
     <div class="header-inner">
-      <a href="#topo" class="logo" aria-label="Doce Encanto - início">
+      <a href="#topo" class="logo" aria-label="JSL Doces - início">
         <span class="logo-icon" aria-hidden="true">🍫</span>
         <span class="logo-text">JSL<em> Doces</em></span>
       </a>
@@ -138,17 +139,24 @@
         <label for="custPhone">Telefone</label>
         <input type="tel" id="custPhone" name="custPhone" placeholder="(84) 99999-9999" required />
 
-        <!-- Endereço dividido em 3 campos, para deixar o pedido mais organizado -->
+        <!-- Seleção de bairro: dois botões clicáveis no lugar dos campos de endereço -->
         <h3 class="form-subheading">Endereço de entrega</h3>
 
-        <label for="custHouseNumber">Número da casa</label>
-        <input type="text" id="custHouseNumber" name="custHouseNumber" placeholder="Ex: 123" required />
+        <label for="custStreetNumber">Rua e número da casa</label>
+        <input type="text" id="custStreetNumber" name="custStreetNumber" placeholder="Ex: Rua Guamaré, nº 123" required />
 
-        <label for="custStreet">Rua</label>
-        <input type="text" id="custStreet" name="custStreet" placeholder="Nome da rua" required />
-
-        <label for="custNeighborhood">Bairro</label>
-        <input type="text" id="custNeighborhood" name="custNeighborhood" placeholder="Nome do bairro" required />
+        <div class="radio-group" role="radiogroup" aria-label="Bairro de entrega">
+          <label class="radio-option">
+            <input type="radio" name="neighborhood" id="neighborhoodAlto" value="Alto do Rodrigues" required />
+            <span class="radio-custom" aria-hidden="true"></span>
+            <span class="radio-label">📍 Alto do Rodrigues</span>
+          </label>
+          <label class="radio-option">
+            <input type="radio" name="neighborhood" id="neighborhoodTabatinga" value="Tabatinga" />
+            <span class="radio-custom" aria-hidden="true"></span>
+            <span class="radio-label">📍 Tabatinga</span>
+          </label>
+        </div>
 
         <!-- Forma de pagamento: cards clicáveis estilo radio button -->
         <h3 class="form-subheading">Forma de Pagamento</h3>

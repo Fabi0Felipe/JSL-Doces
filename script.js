@@ -1,5 +1,5 @@
 /* =====================================================================
-   DOCE ENCANTO — SCRIPT PRINCIPAL
+   JSL Doces — SCRIPT PRINCIPAL
    Responsável por:
    - Manter a lista de produtos (fonte única de dados)
    - Renderizar os cards de produto dinamicamente
@@ -56,7 +56,7 @@
         name: "Empada Doce",
         price: 7.00,
         desc: "Massa amanteigada recheada com doce de leite cremoso e finalizada com calda dourada.",
-        image: "image.jpeg",
+        image: "images/empada-doce.jpeg",
         alt: "Empada doce recheada com doce de leite e calda dourada",
       },
     ];
@@ -83,10 +83,6 @@
     const cartCountEl = document.getElementById("cartCount");
     const checkoutForm = document.getElementById("checkoutForm");
     const toastEl = document.getElementById("toast");
-  
-    const custHouseNumberInput = document.getElementById("custHouseNumber");
-    const custStreetInput = document.getElementById("custStreet");
-    const custNeighborhoodInput = document.getElementById("custNeighborhood");
   
     /* ---------------- 5. FUNÇÕES UTILITÁRIAS ---------------- */
   
@@ -308,23 +304,22 @@
         return;
       }
   
-      const houseNumber = custHouseNumberInput.value.trim();
-      const street = custStreetInput.value.trim();
-      const neighborhood = custNeighborhoodInput.value.trim();
+      const neighborhoodChecked = document.querySelector('input[name="neighborhood"]:checked');
+      const neighborhood = neighborhoodChecked ? neighborhoodChecked.value : "";
+      const streetNumber = document.getElementById("custStreetNumber").value.trim();
       const paymentMethod = getPaymentMethod();
   
       // Captura os dados informados no formulário
       const customer = {
         name: document.getElementById("custName").value.trim(),
         phone: document.getElementById("custPhone").value.trim(),
-        // Junta os 3 campos em uma única linha de endereço para a mensagem
-        address: `${street}, nº ${houseNumber} - ${neighborhood}`,
+        address: neighborhood ? `${streetNumber} - ${neighborhood}` : streetNumber,
         paymentLabel: getPaymentLabel(paymentMethod),
         notes: document.getElementById("custNotes").value,
       };
   
-      if (!customer.name || !customer.phone || !houseNumber || !street || !neighborhood) {
-        showToast("Preencha nome, telefone e endereço completo para continuar");
+      if (!customer.name || !customer.phone || !streetNumber || !neighborhood) {
+        showToast("Preencha nome, telefone, rua/número e selecione o bairro para continuar");
         return;
       }
   
